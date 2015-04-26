@@ -49,7 +49,7 @@ function install(uuid, top, config) {
     });
 }
 
-exports.run = function run(args) {
+exports.run = function run(env, args) {
   var build_config = project.Configuration.Debug; // eventually this will be a parameter
   var proj = project.Project.findContaining ();
   if (!proj)

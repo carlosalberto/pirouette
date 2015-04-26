@@ -3,7 +3,7 @@ var util = require("./util"),
     path = require("path"),
     project = require("./project");
 
-function run(args) {
+function run(env, args) {
     var project_type;
 
     switch (args[0]) {
@@ -28,7 +28,7 @@ function run(args) {
 	throw "you need to specify project name"
     }
 
-    copyTemplateDir(path.join ("templates", project_type), project_name);
+    copyTemplateDir(path.join (env.pirouette_dir, "templates", project_type), project_name);
 }
 
 function copyTemplateDir(templateDir, projectDir) {

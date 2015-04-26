@@ -1,9 +1,19 @@
 #!/usr/bin/env node
 
+var path = require('path');
+
 var args = process.argv;
+var runningNative = typeof __ejs !== 'undefined';
+var env = {};
 
 // slice off the right number of arguments
-args = args.slice(typeof __ejs !== 'undefined' ? 1 : 2);
+if (runningNative) {
+	env.pirouette_dir = path.dirname(path.resolve(args[0]));
+	args = args.slice(1);
+} else { // Node
+	env.pirouette_dir = path.dirname(path.resolve(args[1]));
+	args = args.slice(2);
+}
 
 var toolname = "pirouette";
 
@@ -17,7 +27,7 @@ var commands = Object.create (null, {
     help: { enumerable: true, value: {
 	usage: function(s) { return s + " <Command>"; },
 	usageString: function(s) { return ": gives more detailed help for <Command>, or this output if no command is given."; },
-	run: function(args) {
+	run: function(env, args) {
 	    if (args.length === 0) {
 		return usage();
 	    }
@@ -34,42 +44,42 @@ var commands = Object.create (null, {
 		nl_and_indent("        -osx: an OSX project [default]");
 	},
 
-	run: function(args) {
-	    createCommand.run(args);
+	run: function(env, args) {
+	    createCommand.run(env, args);
 	}
     }},
 
     build: { enumerable: true, value: {
 	usage: function(s) { return s; },
 	usageString: function(s) { return ": Builds the current project."; },
-	run: function(args) {
-	    buildCommand.run(args);
+	run: function(env, args) {
+	    buildCommand.run(env, args);
 	}
     }},
 
     clean: { enumerable: true, value: {
 	usage: function(s) { return s; },
 	usageString: function(s) { return ": Cleans the current project."; },
-	run: function(args) {
-	    cleanCommand.run(args);
+	run: function(env, args) {
+	    cleanCommand.run(env, args);
 	}
     }},
 
     sim: { enumerable: true, value: {
 	usage: function(s) { return s; },
 	usageString: function(s) { return ": deploy the current project to the simulator (only available for ios projects)."; },
-	run: function(args) {
+	run: function(env, args) {
 	    buildCommand.run([]); // the default build behavior is to build if necessary
-	    simCommand.run(args);
+	    simCommand.run(env, args);
 	}
     }},
 
     dev: { enumerable: true, value: {
 	usage: function(s) { return s; },
 	usageString: function(s) { return ": deploy the current project to the device (only available for ios projects)."; },
-	run: function(args) {
+	run: function(env, args) {
 	    buildCommand.run([]); // the default build behavior is to build if necessary
-	    devCommand.run(args);
+	    devCommand.run(env, args);
 	}
     }}
 });
@@ -100,7 +110,7 @@ var cmd = commands[args[0]];
 
 if (cmd) {
     try {
-	cmd.run (args.slice(1));
+	cmd.run (env, args.slice(1));
     }
     catch (e) {
 	console.log (toolname + ": command `" + args[0] + "' failed:");

@@ -54,7 +54,7 @@ function buildDestDir(top, config) {
   return bundle_contents;
 }
 
-function run(args) {
+function run(env, args) {
   var build_config = project.Configuration.Debug; // eventually this will be a parameter
 
   var proj = project.Project.findContaining ();
