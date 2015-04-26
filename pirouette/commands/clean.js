@@ -4,7 +4,7 @@ var util = require("./util"),
     Project = proj.Project,
     Configuration = proj.Configuration;
 
-function run(args) {
+function run(env, args) {
   var project = Project.findContaining ();
   if (!project)
     throw new Error ("Couldn't find containing project.");
