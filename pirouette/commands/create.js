@@ -21,7 +21,7 @@ function run(env, args) {
 	project_type = project.ProjectTypes.osx;
     }
 
-    project_name = args[0];
+    project_name = path.basename(args[0]); // Strip the path from the project name, if any
     app_delegate_name = "AppDelegate"; // XXX eventually make this a parameter
 
     if (!project_name) {
