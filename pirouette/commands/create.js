@@ -6,6 +6,9 @@ var util = require("./util"),
 function run(env, args) {
     var project_type;
 
+    if (args.length == 0)
+        throw new Error("A project name is required");
+
     switch (args[0]) {
     case "-ios":
 	project_type = project.ProjectTypes.ios;
